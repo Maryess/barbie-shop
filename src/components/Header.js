@@ -1,0 +1,61 @@
+import React, { useState } from 'react'
+import { FaCartShopping } from "react-icons/fa6";
+import Order from './Order';
+import Barbie from '../img/logo/barbie.svg'
+
+const showOrders = (props) =>{
+  let summa = 0
+  props.orders.forEach(el => summa += Number.parseFloat(el.price))
+  return (
+    <div>
+        {props.orders.map(el =>(
+          <Order onDelete={props.onDelete} key={el.id} item={el}/>
+        ))}
+        <p className='summa'> Сумма: {new Intl.NumberFormat().format(summa)}€ </p>
+    </div>
+  )
+}
+
+const showNothing =()=>{
+  return(
+    <div className='empty'>
+      <h2>Товаров нет</h2> 
+    </div>
+  )
+}
+
+export default function Header(props) {
+  let [cartOpen, setCartOpen] = useState(false)
+  
+  return (
+    
+      <header>
+        <div className='header-main'>
+          <div className='header-main__text'>
+            <img src={Barbie} className='barbie-logo' width="50px" height="20px"></img>
+            <span className='logo'>Barbie shop</span>
+            <ul className="nav">
+                <li>Про нас</li>
+                <li>Контакты</li>
+                <li>Кабинет</li>
+            </ul>
+            <FaCartShopping onClick ={()=>setCartOpen(cartOpen = !cartOpen)} className={`shop-card-button ${cartOpen && 'active'}`}/> 
+            {/*&& проверяют выражение (в таком случаею...) */}
+            {/* Если cartOpen true, то выводится html */}
+            {cartOpen && (
+              <div className ='shop-cart'>
+                
+                  {props.orders.length > 0 ?
+                    showOrders(props) : showNothing()}
+
+                  {/* Если длина больше 0, то showOrders() либо же, если меньше и равна 0, то showNothing() */}
+
+              </div>
+            )}
+          </div>
+        </div>
+        <div className='presentation'></div>
+      </header>
+    
+  )
+}
